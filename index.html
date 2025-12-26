@@ -16,13 +16,15 @@
         const { useState } = React;
 
         const initialCandidates = [
-            { id: 1, name: "Aditi Rathour", role: "Python Developer", score: 94, status: "Shortlisted", email: "aditi@example.com" },
-            { id: 2, name: "Aryan Khan", role: "React Intern", score: 82, status: "Interviewing", email: "aryan@example.com" },
-            { id: 3, name: "Sanya Gupta", role: "Data Scientist", score: 45, status: "Rejected", email: "sanya@example.com" },
-            { id: 4, name: "Vijay Pratap", role: "Backend Engineer", score: 88, status: "Shortlisted", email: "vijay@example.com" },
+            { id: 1, name: "Aditi Rathour", role: "Python Developer", score: 94, status: "Shortlisted", email: "aditi@example.com", bio: "BCA Student at CSJMU with expertise in Python and NLP-based automation tools.", skills: ["Python", "React", "GKE"] },
+            { id: 2, name: "Aryan Khan", role: "React Intern", score: 82, status: "Interviewing", email: "aryan@example.com", bio: "Frontend enthusiast focused on building high-performance web dashboards.", skills: ["JavaScript", "Tailwind", "Vercel"] },
+            { id: 3, name: "Sanya Gupta", role: "Data Scientist", score: 45, status: "Rejected", email: "sanya@example.com", bio: "Interested in statistical modeling and data visualization.", skills: ["R", "Pandas", "Matplotlib"] },
+            { id: 4, name: "Vijay Pratap", role: "Backend Engineer", score: 88, status: "Shortlisted", email: "vijay@example.com", bio: "Experienced in building scalable APIs and database management.", skills: ["Node.js", "MongoDB", "Docker"] },
         ];
 
         function App() {
+            const [selectedUser, setSelectedUser] = useState(null);
+
             return (
                 <div className="min-h-screen p-10 font-sans">
                     <header className="mb-8 border-b-2 border-slate-200 pb-5">
@@ -42,16 +44,40 @@
                                         {candidate.score}% Match
                                     </div>
                                 </div>
-                                <div className="mt-5 text-sm space-y-1">
-                                    <div className="text-slate-600">Status: <span className="font-semibold text-slate-800">{candidate.status}</span></div>
-                                    <div className="text-slate-600">Contact: {candidate.email}</div>
-                                </div>
-                                <button className="mt-5 w-full py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors">
+                                <button 
+                                    onClick={() => setSelectedUser(candidate)}
+                                    className="mt-10 w-full py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors"
+                                >
                                     View Full Profile
                                 </button>
                             </div>
                         ))}
                     </div>
+
+                    {/* --- THE MODAL (The Working Part) --- */}
+                    {selectedUser && (
+                        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                            <div className="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl">
+                                <div className="flex justify-between items-center mb-6">
+                                    <h2 className="text-2xl font-bold">{selectedUser.name}</h2>
+                                    <button onClick={() => setSelectedUser(null)} className="text-slate-400 hover:text-slate-600 text-2xl">&times;</button>
+                                </div>
+                                <div className="space-y-4">
+                                    <p className="text-slate-600"><strong>Role:</strong> {selectedUser.role}</p>
+                                    <p className="text-slate-600"><strong>AI Insight:</strong> {selectedUser.bio}</p>
+                                    <div className="flex flex-wrap gap-2">
+                                        {selectedUser.skills.map(s => (
+                                            <span key={s} className="bg-slate-100 px-3 py-1 rounded-md text-xs font-medium text-slate-600">{s}</span>
+                                        ))}
+                                    </div>
+                                    <div className="pt-4 border-t border-slate-100 flex justify-between items-center">
+                                        <span className="text-sm text-slate-500">{selectedUser.email}</span>
+                                        <button className="text-indigo-600 font-bold hover:underline">Download Resume</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             );
         }
